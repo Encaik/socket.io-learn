@@ -72,12 +72,24 @@
         word-break: break-all;
         border-radius: 5px;
       }
+      .left > p::before {
+        content: "";
+        position: absolute;
+        display: block;
+        width: 0;
+        height: 0;
+        left: -10px;
+        top: 10px;
+        border-top: 2px solid transparent;
+        border-bottom: 10px solid transparent;
+        border-right: 10px solid #53bf53;
+      }
       .left > .img {
         width: 40px;
         height: 40px;
         border-radius: 50%;
         position: absolute;
-        right: -60px;
+        left: -60px;
         top: -15px;
         border: 2px solid black;
         color: black;
@@ -116,6 +128,19 @@
         min-width: 10px;
         word-break: break-all;
         border-radius: 5px;
+        position: relative;
+      }
+      .right > p::before {
+        content: "";
+        position: absolute;
+        display: block;
+        width: 0;
+        height: 0;
+        right: -10px;
+        top: 10px;
+        border-top: 2px solid transparent;
+        border-bottom: 10px solid transparent;
+        border-left: 10px solid #81d0ff;
       }
       .right > .img {
         width: 40px;
