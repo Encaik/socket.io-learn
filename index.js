@@ -31,14 +31,15 @@ var names = [
   "子斌",
   "况家豪",
 ];
+var users = ["沙桐", "方子培", "何宸风", "王智慧"];
 var user = [];
 io.on("connection", (socket) => {
   console.log("用户已连接", socket.handshake.address.slice(7, -1));
   let nip = socket.handshake.address.slice(7, -1);
   let name = "";
   let isName = false;
+  let isImg = false;
   socket.on("cmsg", ({ uname, msg }) => {
-    console.log(uname, msg);
     user.forEach((i) => {
       if (i.ip == nip) {
         name = i.name;
@@ -53,17 +54,24 @@ io.on("connection", (socket) => {
       names.shift();
       user.push({ name, ip: nip });
     }
+    users.forEach((i) => {
+      if (i == name) {
+        isImg = true;
+      }
+    });
     socket.broadcast.emit("smsg", {
       msg,
       name,
       id: socket.id,
       time: new Date().getTime(),
+      isImg,
     });
     socket.emit("mmsg", {
       msg,
       name,
       id: socket.id,
       time: new Date().getTime(),
+      isImg,
     });
   });
   socket.on("disconnect", () => {

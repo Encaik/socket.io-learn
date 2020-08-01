@@ -72,6 +72,19 @@
         word-break: break-all;
         border-radius: 5px;
       }
+      .left > .img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        position: absolute;
+        right: -60px;
+        top: -15px;
+        border: 2px solid black;
+        color: black;
+        font-size: 25px;
+        line-height: 40px;
+        text-align: center;
+      }
       .left > img {
         width: 40px;
         height: 40px;
@@ -103,6 +116,19 @@
         min-width: 10px;
         word-break: break-all;
         border-radius: 5px;
+      }
+      .right > .img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        position: absolute;
+        right: -60px;
+        top: -15px;
+        border: 2px solid black;
+        color: black;
+        font-size: 25px;
+        line-height: 40px;
+        text-align: center;
       }
       .right > img {
         width: 40px;
@@ -144,19 +170,39 @@
           return false;
         });
         socket.on("smsg", function (msg) {
-          $("#messages").append(
-            $(`<div id='${msg.time}' class='left'></div>`).append(
-              `<span>${msg.name}</span><p>${msg.msg}</p><img src="./img/${msg.name}.jpg"/>`
-            )
-          );
+          if (msg.isImg) {
+            $("#messages").append(
+              $(`<div id='${msg.time}' class='left'></div>`).append(
+                `<span>${msg.name}</span><p>${msg.msg}</p><img src="./img/${msg.name}.jpg"/>`
+              )
+            );
+          } else {
+            $("#messages").append(
+              $(`<div id='${msg.time}' class='left'></div>`).append(
+                `<span>${msg.name}</span><p>${
+                  msg.msg
+                }</p><div class="img">${msg.name.slice(0, 1)}</div>`
+              )
+            );
+          }
           //document.getElementById(msg.time).scrollIntoView();
         });
         socket.on("mmsg", function (msg) {
-          $("#messages").append(
-            $(`<div id='${msg.time}' class='right'></div>`).append(
-              `<span>${msg.name}</span><p>${msg.msg}</p><img src="./img/${msg.name}.jpg"/>`
-            )
-          );
+          if (msg.isImg) {
+            $("#messages").append(
+              $(`<div id='${msg.time}' class='right'></div>`).append(
+                `<span>${msg.name}</span><p>${msg.msg}</p><img src="./img/${msg.name}.jpg"/>`
+              )
+            );
+          } else {
+            $("#messages").append(
+              $(`<div id='${msg.time}' class='right'></div>`).append(
+                `<span>${msg.name}</span><p>${
+                  msg.msg
+                }</p><div class="img">${msg.name.slice(0, 1)}</div>`
+              )
+            );
+          }
           document.getElementById(msg.time).scrollIntoView();
         });
       });
