@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>激情在线聊天室</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+      }
+      form {
+        height: 40px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: fixed;
+        bottom: 0;
+      }
+      #n {
+        padding: 10px;
+        width: 80px;
+        height: 16px;
+      }
+      #m {
+        padding: 10px;
+        width: calc(100% - 160px);
+        height: 16px;
+      }
+      form button {
+        width: 80px;
+        background: rgb(130, 224, 255);
+        border: none;
+        padding: 10px;
+        height: 40px;
+      }
+      #messages {
+        height: calc(100% - 40px);
+        overflow: auto;
+        box-sizing: border-box;
+        padding: 0;
+        margin: 0;
+      }
+      #messages > div {
+        position: relative;
+      }
+      .left {
+        margin: 30px auto 10px 70px;
+        max-width: 200px;
+        display: flex;
+        justify-content: flex-start;
+      }
+      .left > span {
+        position: absolute;
+        top: -20px;
+        left: 10px;
+        font-size: 10px;
+        color: #666;
+      }
+      .left > p {
+        display: inline-block;
+        background: #53bf53;
+        padding: 5px 10px;
+        margin: 0;
+        line-height: 30px;
+        min-height: 30px;
+        min-width: 10px;
+        word-break: break-all;
+        border-radius: 5px;
+      }
+      .left > img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        position: absolute;
+        left: -60px;
+        top: -15px;
+      }
+      .right {
+        margin: 30px 70px 10px auto;
+        max-width: 200px;
+        display: flex;
+        justify-content: flex-end;
+      }
+      .right > span {
+        position: absolute;
+        top: -20px;
+        right: 10px;
+        font-size: 10px;
+        color: #666;
+      }
+      .right > p {
+        display: inline-block;
+        background: #81d0ff;
+        padding: 5px 10px;
+        margin: 0;
+        line-height: 30px;
+        min-height: 30px;
+        min-width: 10px;
+        word-break: break-all;
+        border-radius: 5px;
+      }
+      .right > img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        position: absolute;
+        right: -60px;
+        top: -15px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="messages"></div>
+    <form action="">
+      <input id="n" placeholder="请输入用户名" autocomplete="off" />
+      <input id="m" placeholder="请输入发送信息" autocomplete="off" />
+      <button>发送</button>
+    </form>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+      $(function () {
+        var socket = io();
+        $("form").submit(function (e) {
+          e.preventDefault(); // prevents page reloading
+          var exp = new RegExp(
+            "\\b(document|onload|eval|script|img|svg|onerror|javascript|alert)\\b"
+          );
+          if ($("#m").val() == "") {
+            alert("输入不能为空，请重新输入！");
+          } else if (exp.test($("#m").val())) {
+            alert("小朋友不要胡闹嗷！");
+            $("#m").val("");
+          } else {
+            socket.emit("cmsg", { uname: $("#n").val(), msg: $("#m").val() });
+            $("#n").prop("disabled", true);
+            $("#m").val("");
+          }
+          return false;
+        });
+        socket.on("smsg", function (msg) {
+          $("#messages").append(
+            $(`<div id='${msg.time}' class='left'></div>`).append(
+              `<span>${msg.name}</span><p>${msg.msg}</p><img src="./img/${msg.name}.jpg"/>`
+            )
+          );
+          //document.getElementById(msg.time).scrollIntoView();
+        });
+        socket.on("mmsg", function (msg) {
+          $("#messages").append(
+            $(`<div id='${msg.time}' class='right'></div>`).append(
+              `<span>${msg.name}</span><p>${msg.msg}</p><img src="./img/${msg.name}.jpg"/>`
+            )
+          );
+          document.getElementById(msg.time).scrollIntoView();
+        });
+      });
+    </script>
+  </body>
+</html>
